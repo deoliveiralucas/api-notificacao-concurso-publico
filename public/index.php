@@ -8,7 +8,7 @@ use DOLucas\Concurso\Service\ReceiverService;
 use DOLucas\Concurso\Mapper\ReceiverMapper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-$app['debug'] = false;
+$app['debug'] = true;
 
 $app['service.concurso'] = function() use ($app) {
 	return new ConcursoService($app['urls'](), true);
