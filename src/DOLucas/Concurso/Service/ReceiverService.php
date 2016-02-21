@@ -41,7 +41,7 @@ class ReceiverService
 
             if (count($concursosToSend)) {
                 $emailsNotified[] = $receiver['email'];
-                //$this->send($concursosToSend, $receiver['email']);
+                $this->send($concursosToSend, $receiver['email']);
             }
         }
 
