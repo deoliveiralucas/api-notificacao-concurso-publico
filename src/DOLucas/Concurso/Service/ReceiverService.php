@@ -80,7 +80,7 @@ class ReceiverService
 
         $message = new Message();
         $message
-            ->setFrom($receiver['from'])
+            ->setFrom($receiver['from']['email'], $receiver['from']['name'])
             ->addTo($receiver['email'])
             ->setSubject('Aviso de Concurso')
             ->setHTMLBody(sprintf(
