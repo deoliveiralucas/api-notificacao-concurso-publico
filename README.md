@@ -1,4 +1,4 @@
-## Aviso de concuso público
+## Aviso de concurso público
 
 Aplicação para enviar email quando encontrar inscrições de concursos públicos abertas.
 

@@ -20,12 +20,13 @@ $app['service.receiver'] = function() use ($app) {
 };
 
 $app->get('/notify', function () use ($app) {
-    $app['service.receiver']->notify();
+    $emails = $app['service.receiver']->notify();
 
     return new JsonResponse([
         'success' => true,
         'message' => 'Alertas enviados com sucesso',
-        'sent_at' => new \DateTime()
+        'sent_at' => new \DateTime(),
+		'emails'  => $emails
     ]);
 });
 

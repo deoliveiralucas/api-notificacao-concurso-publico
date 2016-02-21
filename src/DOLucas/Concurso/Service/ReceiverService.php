@@ -27,6 +27,7 @@ class ReceiverService
         $intituicoes = $this->concursoService->getInstituicoes();
         $receivers = $this->receiverMapper->findAll();
 
+        $emailsNotified = [];
         foreach ($receivers as $receiver) {
             $concursosToSend = [];
             foreach ($receiver['instituicoes'] as $instituicaoReceiver) {
@@ -38,8 +39,13 @@ class ReceiverService
                 }
             }
 
-            $this->send($concursosToSend, $receiver['email']);
+            if (count($concursosToSend)) {
+                $this->send($concursosToSend, $receiver['email']);
+                $emailsNotified = $receiver['email'];
+            }
         }
+
+        return $emailsNotified;
     }
 
     protected function send(array $concursos, $email)
