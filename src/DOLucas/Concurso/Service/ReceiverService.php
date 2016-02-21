@@ -31,7 +31,7 @@ class ReceiverService
         foreach ($receivers as $receiver) {
             $concursosToSend = [];
             foreach ($receiver['instituicoes'] as $instituicaoReceiver) {
-                if (in_array($instituicaoReceiver, $intituicoes)) {
+                if ($this->almostSureInArray($instituicaoReceiver, $intituicoes)) {
                     $concursosToSend[] = [
                         'instituicao' => $instituicaoReceiver,
                         'link' => $this->concursoService->getVagaLink($instituicaoReceiver)
@@ -41,11 +41,29 @@ class ReceiverService
 
             if (count($concursosToSend)) {
                 $emailsNotified[] = $receiver['email'];
-                $this->send($concursosToSend, $receiver['email']);
+                //$this->send($concursosToSend, $receiver['email']);
             }
         }
 
         return $emailsNotified;
+    }
+
+    /**
+     * Para não precisar digitar o nome da institução
+     * exatamente igual está no site do gov :)
+     * @param string $needle
+     * @param array $instituicoes
+     * @return boolean
+     */
+    protected function almostSureInArray($needle, array $instituicoes)
+    {
+        foreach ($instituicoes as $instituicao) {
+            similar_text($needle, $instituicao, $percent);
+            if ($percent >= 80) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function send(array $concursos, $email)
@@ -63,7 +81,6 @@ class ReceiverService
 
         $message = new Message();
         $message
-            ->setFrom(sprintf('Aviso de Concurso <%s>', $email))
             ->addTo($email)
             ->setSubject('Aviso de Concurso')
             ->setHTMLBody(sprintf(
