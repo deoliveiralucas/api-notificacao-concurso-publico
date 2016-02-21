@@ -16,8 +16,7 @@ class ReceiverService
     public function __construct(
         ConcursoService $concursoService,
         ReceiverMapper $receiverMapper
-    )
-    {
+    ) {
         $this->concursoService = $concursoService;
         $this->receiverMapper = $receiverMapper;
     }
@@ -41,7 +40,7 @@ class ReceiverService
 
             if (count($concursosToSend)) {
                 $emailsNotified[] = $receiver['email'];
-                $this->send($concursosToSend, $receiver['email']);
+                $this->send($concursosToSend, $receiver);
             }
         }
 
@@ -66,7 +65,7 @@ class ReceiverService
         return false;
     }
 
-    protected function send(array $concursos, $email)
+    protected function send(array $concursos, array $receiver)
     {
         $arrMessage = [];
         foreach ($concursos as $concurso) {
@@ -81,7 +80,8 @@ class ReceiverService
 
         $message = new Message();
         $message
-            ->addTo($email)
+            ->setFrom($receiver['from'])
+            ->addTo($receiver['email'])
             ->setSubject('Aviso de Concurso')
             ->setHTMLBody(sprintf(
                 'Existem concursos abertos para as instituições de sua preferência.<br><br>%s',
