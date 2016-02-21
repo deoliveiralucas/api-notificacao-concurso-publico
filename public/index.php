@@ -8,7 +8,7 @@ use DOLucas\Concurso\Service\ReceiverService;
 use DOLucas\Concurso\Mapper\ReceiverMapper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-$app['debug'] = true;
+$app['debug'] = false;
 
 $app['service.concurso'] = function() use ($app) {
 	return new ConcursoService($app['urls'](), true);
@@ -25,8 +25,8 @@ $app->get('/notify', function () use ($app) {
     return new JsonResponse([
         'success' => true,
         'message' => 'Alertas enviados com sucesso',
-        'sent_at' => new \DateTime(),
-		'emails'  => $emails
+    	'sent_at' => new \DateTime(),
+        'emails' => $emails
     ]);
 });
 
