@@ -1,0 +1,5 @@
+vendor
+storage/data.json
+config
+lib
+Capfile

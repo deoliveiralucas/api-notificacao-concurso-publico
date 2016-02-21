@@ -1,0 +1,10 @@
+{
+  "0": {
+    "email": "seu@email.com.br",
+    "instituicoes": [
+      "FATEC SAO PAULO",
+      "FATEC TAUBATE"
+    ],
+    "__comment": "O nome das intituições devem estar exatamente como no site http://www.concursopublico.sp.gov.br/"
+  }
+}
