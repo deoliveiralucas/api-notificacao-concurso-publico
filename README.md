@@ -7,4 +7,4 @@ Aplicação para enviar email quando encontrar inscrições de concursos públic
 
 ## Configuração
 
-- Renomeie o arquivo `storage/data.json.dist` para `storage/data.json` e adicione seus dados.
+- Renomeie o arquivo `storage/data.json.example` para `storage/data.json` e adicione seus dados.
