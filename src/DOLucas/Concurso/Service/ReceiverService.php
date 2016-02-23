@@ -48,8 +48,8 @@ class ReceiverService
     }
 
     /**
-     * Para não precisar digitar o nome da institução
-     * exatamente igual está no site do gov :)
+     * Para não precisar digitar o nome da instituição
+     * exatamente como está no site do gov :)
      * @param string $needle
      * @param array $instituicoes
      * @return boolean
