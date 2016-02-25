@@ -1,5 +1,5 @@
-{
-  "0": {
+[
+  {
     "from": {
       "name": "Aviso de Concurso",
       "email": "serveremail@smtp.com.br"
@@ -11,4 +11,4 @@
     ],
     "__comment": "O nome das intituições devem estar parecido com o do site http://www.concursopublico.sp.gov.br/"
   }
-}
+]
