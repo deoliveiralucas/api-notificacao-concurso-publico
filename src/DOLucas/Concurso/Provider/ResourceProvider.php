@@ -7,6 +7,10 @@ use Silex\ServiceProviderInterface;
 
 class ResourceProvider implements ServiceProviderInterface
 {
+
+    /**
+     * @param Application $app
+     */
     public function register(Application $app)
     {
         $app['urls'] = $app->protect(function () {
@@ -15,6 +19,9 @@ class ResourceProvider implements ServiceProviderInterface
         });
     }
 
+    /**
+     * @param Application $app
+     */
     public function boot(Application $app)
     {
 

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 $app['debug'] = false;
 
 $app['service.concurso'] = function() use ($app) {
-	return new ConcursoService($app['urls'](), true);
+	return new ConcursoService($app['urls']());
 };
 
 $app['service.receiver'] = function() use ($app) {
@@ -19,15 +19,27 @@ $app['service.receiver'] = function() use ($app) {
     return new ReceiverService($app['service.concurso'], $receiverMapper);
 };
 
+/**
+ * Notificação de concursos abertos por e-mail
+ */
 $app->get('/notify', function () use ($app) {
     $emails = $app['service.receiver']->notify();
 
     return new JsonResponse([
         'success' => true,
         'message' => 'Alertas enviados com sucesso',
-    	'sent_at' => new \DateTime(),
+    	'sent_at' => new DateTime(),
         'emails' => $emails
     ]);
+});
+
+/**
+ * API JSON de concursos
+ */
+$app->get('/api/concursos/{status}', function ($status) use ($app) {
+    $concursos = $app['service.concurso']->getConcursos($status);
+
+    return new JsonResponse($concursos);
 });
 
 $app->run();

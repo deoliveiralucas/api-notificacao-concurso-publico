@@ -3,36 +3,106 @@
 namespace DOLucas\Concurso\Service;
 
 use DOLucas\Concurso\Mapper\ConcursoMapper;
-use \DOMDocument;
+use DOMDocument;
+use InvalidArgumentException;
 
 class ConcursoService
 {
+
+    /**
+     * @var string
+     */
+    const STATUS_PROXIMO = 'proximo';
+
+    /**
+     * @var string
+     */
+    const STATUS_ABERTO = 'aberto';
+
+    /**
+     * @var string
+     */
+    const STATUS_ANDAMENTO = 'andamento';
+
+    /**
+     * @var string
+     */
+    const STATUS_ENCERRADO = 'encerrado';
+
+    /**
+     * @var string
+     */
+    const URL_DETALHE = 'url_detalhe';
+
+    /**
+     * @var array
+     */
     protected $urls;
+
+    /**
+     * @var array
+     */
     protected $concursos = [];
 
-    public function __construct(array $urls, $loadConcursos = false)
+    /**
+     * @var string
+     */
+    protected $status;
+
+    /**
+     * @param array $urls
+     * @param string $status
+     */
+    public function __construct(array $urls)
     {
         $this->urls = $urls;
-
-        if ($loadConcursos === true) {
-            $this->loadConcursos();
-        }
     }
 
+    /**
+     * @param string $status
+     * @throws InvalidArgumentException
+     */
+    public function setStatus($status)
+    {
+        $valid = array(
+            static::STATUS_PROXIMO,
+            static::STATUS_ABERTO,
+            static::STATUS_ANDAMENTO,
+            static::STATUS_ENCERRADO
+        );
+
+        if (! in_array($status, $valid)) {
+            throw new InvalidArgumentException(sprintf('status %s inválido', $status));
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return ConcursoService
+     */
     public function loadConcursos()
     {
-        $domConcursosGov = file_get_contents($this->urls['concursos_abertos']);
+        $domConcursosGov = file_get_contents($this->urls[$this->getStatus()]);
 
-        $DOM = new DOMDocument();
-        @$DOM->loadHTML($domConcursosGov); // :)
+        $dOM = new DOMDocument();
+        @$dOM->loadHTML($domConcursosGov);
 
-        $rows = $DOM->getElementsByTagName('tr');
+        $rows = $dOM->getElementsByTagName('tr');
 
         $concursos = [];
         foreach ($rows as $row) {
             $idConcurso = $row->getAttribute('id');
             if (is_numeric($idConcurso)) {
-                $concursos[$idConcurso] = $this->getColsAsArray($row->childNodes);
+                $concursos[] = $this->getColsAsArray($row->childNodes, $idConcurso);
             }
         }
 
@@ -40,49 +110,55 @@ class ConcursoService
         return $this;
     }
 
-    public function getConcursos()
+    /**
+     * @param string $status
+     * @return array
+     */
+    public function getConcursos($status = null)
     {
-        if (! count($this->concursos)) {
+        if (is_null($status)) {
+            $status = static::STATUS_ABERTO;
+        }
+
+        $this->setStatus($status);
+
+        if (! count($this->concursos) || $status !== $this->getStatus()) {
             $this->loadConcursos();
         }
+
         return $this->concursos;
     }
 
-    public function getInstituicoes()
-    {
-        $instituicoes = [];
-        foreach ($this->getConcursos() as $concurso) {
-            $instituicoes[] = $concurso[0];
-        }
-
-        return $instituicoes;
-    }
-
-    public function getVagaLink($instituicao)
-    {
-        $intituicaoId = null;
-        foreach ($this->getConcursos() as $id => $infoConcurso) {
-            if ($infoConcurso[0] == $instituicao) {
-                $intituicaoId = $id;
-                break;
-            }
-        }
-
-        return sprintf(
-            $this->urls['detalhes_concurso'],
-            $intituicaoId
-        );
-    }
-
-    protected function getColsAsArray($cols)
+    /**
+     * @param object $columns
+     * @param int $intituicaoId
+     * @return array
+     */
+    protected function getColsAsArray($columns, $intituicaoId)
     {
         $infoVaga = [];
-        foreach ($cols as $col) {
+        foreach ($columns as $col) {
             if (($dado = trim($col->nodeValue)) !== '') {
                 $infoVaga[] = $dado;
             }
         }
 
-        return $infoVaga;
+        if (count($infoVaga)) {
+            $linkDetalhes = sprintf(
+                $this->urls[static::URL_DETALHE],
+                $intituicaoId
+            );
+
+            return array(
+                'instituicao'  => isset($infoVaga[0]) ? $infoVaga[0] : null,
+                'cargo'        => isset($infoVaga[1]) ? $infoVaga[1] : null,
+                'escolaridade' => isset($infoVaga[2]) ? $infoVaga[2] : null,
+                'salario'      => isset($infoVaga[4]) ? $infoVaga[4] : null,
+                'inscricoes'   => isset($infoVaga[6]) ? $infoVaga[6] : null,
+                'detalhes'     => $linkDetalhes
+            );
+        }
+
+        return [];
     }
 }

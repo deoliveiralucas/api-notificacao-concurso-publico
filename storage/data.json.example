@@ -3,7 +3,7 @@
     "from": {
       "name": "Aviso de Concurso",
       "email": "serveremail@smtp.com.br"
-    }
+    },
     "email": "seu@email.com.br",
     "instituicoes": [
       "FATEC SAO PAULO",

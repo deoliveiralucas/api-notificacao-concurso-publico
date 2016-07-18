@@ -1,4 +1,7 @@
 {
-  "concursos_abertos": "http://www.concursopublico.sp.gov.br/PortalConcurso/noauth/PortalDeConcursos.do?acao=concursoInscrAberta&par=&pag=",
-  "detalhes_concurso": "http://www.concursopublico.sp.gov.br/PortalConcurso/noauth/PortalDeConcursos.do?acao=exibirConcurso&idConcurso=%s"
+  "proximo": "http://www.concursopublico.sp.gov.br/PortalConcurso/noauth/PortalDeConcursos.do?acao=proximoConcurso",
+  "aberto": "http://www.concursopublico.sp.gov.br/PortalConcurso/noauth/PortalDeConcursos.do?acao=concursoInscrAberta",
+  "andamento": "http://www.concursopublico.sp.gov.br/PortalConcurso/noauth/PortalDeConcursos.do?acao=concursoAndamento",
+  "encerrado": "http://www.concursopublico.sp.gov.br/PortalConcurso/noauth/PortalDeConcursos.do?acao=concursoEncerrado",
+  "url_detalhe": "http://www.concursopublico.sp.gov.br/PortalConcurso/noauth/PortalDeConcursos.do?acao=exibirConcurso&idConcurso=%s"
 }

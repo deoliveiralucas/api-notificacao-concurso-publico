@@ -9,10 +9,21 @@ use Nette\Mail\SendmailMailer;
 
 class ReceiverService
 {
-    protected $concursoService;
-    protected $receiverMapper;
-    protected $urls;
 
+    /**
+     * @var ConcursoService
+     */
+    protected $concursoService;
+
+    /**
+     * @var ReceiverMapper
+     */
+    protected $receiverMapper;
+
+    /**
+     * @param ConcursoService $concursoService
+     * @param ReceiverMapper $receiverMapper
+     */
     public function __construct(
         ConcursoService $concursoService,
         ReceiverMapper $receiverMapper
@@ -21,20 +32,20 @@ class ReceiverService
         $this->receiverMapper = $receiverMapper;
     }
 
+    /**
+     * @return array
+     */
     public function notify()
     {
-        $intituicoes = $this->concursoService->getInstituicoes();
+        $concursos = $this->concursoService->getConcursos();
         $receivers = $this->receiverMapper->findAll();
 
         $emailsNotified = [];
         foreach ($receivers as $receiver) {
             $concursosToSend = [];
             foreach ($receiver['instituicoes'] as $instituicaoReceiver) {
-                if ($this->almostSureInArray($instituicaoReceiver, $intituicoes)) {
-                    $concursosToSend[] = [
-                        'instituicao' => $instituicaoReceiver,
-                        'link' => $this->concursoService->getVagaLink($instituicaoReceiver)
-                    ];
+                if ($concurso = $this->almostSureInArray($instituicaoReceiver, $concursos)) {
+                    $concursosToSend[] = $concurso;
                 }
             }
 
@@ -50,28 +61,33 @@ class ReceiverService
     /**
      * Para não precisar digitar o nome da instituição
      * exatamente como está no site do gov :)
+     *
      * @param string $needle
-     * @param array $instituicoes
-     * @return boolean
+     * @param array $concursos
+     * @return array|bool
      */
-    protected function almostSureInArray($needle, array $instituicoes)
+    protected function almostSureInArray($needle, array $concursos)
     {
-        foreach ($instituicoes as $instituicao) {
-            similar_text($needle, $instituicao, $percent);
+        foreach ($concursos as $concurso) {
+            similar_text($needle, $concurso['instituicao'], $percent);
             if ($percent >= 80) {
-                return true;
+                return $concurso;
             }
         }
         return false;
     }
 
+    /**
+     * @param array $concursos
+     * @param array $receiver
+     */
     protected function send(array $concursos, array $receiver)
     {
         $arrMessage = [];
         foreach ($concursos as $concurso) {
             $arrMessage[] = sprintf(
                 '<a href="%s">%s</a>',
-                $concurso['link'],
+                $concurso['detalhes'],
                 $concurso['instituicao']
             );
         }
