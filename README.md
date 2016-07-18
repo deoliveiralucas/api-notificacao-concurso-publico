@@ -1,6 +1,6 @@
 ## API de concursos públicos com notificação por e-mail
 
-Aplicação para enviar email quando encontrar inscrições de concursos públicos abertas e com uma API JSON.
+Aplicação para enviar email quando encontrar inscrições de concursos públicos abertas com API JSON.
 
 - *Os dados são buscados no site [concursopublico.sp.gov.br](http://www.concursopublico.sp.gov.br/)*
 - *Atualizado: 18/07/2016*
