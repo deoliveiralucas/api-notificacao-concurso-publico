@@ -64,12 +64,12 @@ class ConcursoService
      */
     public function setStatus($status)
     {
-        $valid = array(
+        $valid = [
             static::STATUS_PROXIMO,
             static::STATUS_ABERTO,
             static::STATUS_ANDAMENTO,
             static::STATUS_ENCERRADO
-        );
+        ];
 
         if (! in_array($status, $valid)) {
             throw new InvalidArgumentException(sprintf('status %s inválido', $status));
@@ -149,14 +149,14 @@ class ConcursoService
                 $intituicaoId
             );
 
-            return array(
+            return [
                 'instituicao'  => isset($infoVaga[0]) ? $infoVaga[0] : null,
                 'cargo'        => isset($infoVaga[1]) ? $infoVaga[1] : null,
                 'escolaridade' => isset($infoVaga[2]) ? $infoVaga[2] : null,
                 'salario'      => isset($infoVaga[4]) ? $infoVaga[4] : null,
                 'inscricoes'   => isset($infoVaga[6]) ? $infoVaga[6] : null,
                 'detalhes'     => $linkDetalhes
-            );
+            ];
         }
 
         return [];
