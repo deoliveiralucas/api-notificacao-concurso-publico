@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 $app['debug'] = false;
 
 $app['service.concurso'] = function() use ($app) {
-	return new ConcursoService($app['urls']());
+    return new ConcursoService($app['urls']());
 };
 
 $app['service.receiver'] = function() use ($app) {
