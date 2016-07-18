@@ -23,19 +23,19 @@ Aplicação para enviar email quando encontrar inscrições de concursos públic
 
 ## API concursos
 
-- **Próximos Concursos**
+- **Próximos concursos**
 
     `[GET] /api/concursos/proximo`
 
-- **Concursos Abertos**
+- **Concursos abertos**
 
     `[GET] /api/concursos/aberto`
 
-- **Concursos Andamento**
+- **Concursos em andamento**
 
     `[GET] /api/concursos/andamento`
 
-- **Concursos Encerrado**
+- **Concursos encerrado**
 
     `[GET] /api/concursos/encerrado`
 
